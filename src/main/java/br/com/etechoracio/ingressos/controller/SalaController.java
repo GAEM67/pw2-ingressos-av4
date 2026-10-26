@@ -40,18 +40,46 @@ public class SalaController {
 
     @PostMapping
     public ResponseEntity<Sala> cadastrar(@RequestBody Sala sala) {
+
+        if (sala.getNome() == null || sala.getNome().length() >= 255) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        if (sala.getPreco() == null || sala.getPreco() <= 5) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        if (sala.getDataExclusao() != null) {
+            return ResponseEntity.badRequest().build();
+        }
+
         var novaSala = salaRepository.save(sala);
         return ResponseEntity.status(HttpStatus.CREATED).body(novaSala);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Sala> atualizar(@RequestBody Sala sala, @PathVariable Long id) {
+
+        if (sala.getNome() == null || sala.getNome().length() >= 255) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        if (sala.getPreco() == null || sala.getPreco() <= 5) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        if (sala.getDataExclusao() != null) {
+            return ResponseEntity.badRequest().build();
+        }
+
         var existe = salaRepository.findById(id);
+
         if (existe.isPresent()) {
             sala.setId(id);
             var salaAtualizada = salaRepository.save(sala);
             return ResponseEntity.ok(salaAtualizada);
         }
+
         return ResponseEntity.notFound().build();
     }
 
